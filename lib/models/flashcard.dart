@@ -1,10 +1,10 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
-part 'flashcard.g.dart';  // ✅ سيتم إنشاؤه تلقائياً
+part 'flashcard.g.dart';
 
-@HiveType(typeId: 0)  // ✅ معرف النوع (يجب أن يكون فريداً)
+@HiveType(typeId: 0)
 class Flashcard extends HiveObject {
-  @HiveField(0)  // ✅ معرف الحقل
+  @HiveField(0)
   final String id;
 
   @HiveField(1)
@@ -23,7 +23,7 @@ class Flashcard extends HiveObject {
     DateTime? createdAt,
   }) : createdAt = createdAt ?? DateTime.now();
 
-  // نسخ البطاقة مع تعديلات
+
   Flashcard copyWith({
     String? id,
     String? question,
@@ -38,7 +38,7 @@ class Flashcard extends HiveObject {
     );
   }
 
-  // ✅ تحويل إلى Map للتخزين (اختياري)
+
   Map<String, dynamic> toJson() => {
     'id': id,
     'question': question,
@@ -46,7 +46,7 @@ class Flashcard extends HiveObject {
     'createdAt': createdAt.toIso8601String(),
   };
 
-  // ✅ إنشاء من Map
+
   factory Flashcard.fromJson(Map<String, dynamic> json) => Flashcard(
     id: json['id'],
     question: json['question'],
