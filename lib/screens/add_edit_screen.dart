@@ -98,6 +98,72 @@ class _AddEditScreenState extends State<AddEditScreen> {
     }
   }
 
+  void _attemptSave() {
+    // If both fields are non-empty proceed to save
+    if (_canSave) {
+      _saveForm();
+      return;
+    }
+
+    // Prepare appropriate message
+    final qEmpty = _questionController.text.trim().isEmpty;
+    final aEmpty = _answerController.text.trim().isEmpty;
+    String message;
+    if (qEmpty && aEmpty) {
+      message = 'Please enter a question and an answer';
+    } else if (qEmpty) {
+      message = 'Please enter a question';
+    } else {
+      message = 'Please enter an answer';
+    }
+
+    _showValidationToast(message);
+  }
+
+  void _showValidationToast(String message) {
+    final scheme = Theme.of(context).colorScheme;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          duration: const Duration(milliseconds: 1800),
+          content: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [scheme.primary, scheme.secondary],
+              ),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: scheme.primary.withOpacity(0.18),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.error_outline, color: Colors.white),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    message,
+                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+  }
+
   void _togglePreview() {
     setState(() => _previewShowAnswer = !_previewShowAnswer);
   }
@@ -286,39 +352,17 @@ class _AddEditScreenState extends State<AddEditScreen> {
                                   ],
                                 ),
                                 padding: const EdgeInsets.all(20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                child: Stack(
                                   children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: isBack
-                                            ? Colors.white.withOpacity(0.2)
-                                            : scheme.primary.withOpacity(0.1),
-                                        borderRadius:
-                                        BorderRadius.circular(20),
-                                      ),
-                                      child: Text(
-                                        header,
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          letterSpacing: 2,
-                                          color: isBack
-                                              ? Colors.white
-                                              : scheme.primary,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Expanded(
-                                      child: Center(
+                                    // Centered main text
+                                    Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                         child: Text(
                                           displayText.isEmpty
                                               ? (isBack
-                                              ? 'Your answer will appear here'
-                                              : 'Your question will appear here')
+                                                  ? 'Your answer will appear here'
+                                                  : 'Your question will appear here')
                                               : displayText,
                                           textAlign: TextAlign.center,
                                           maxLines: 4,
@@ -328,12 +372,36 @@ class _AddEditScreenState extends State<AddEditScreen> {
                                             height: 1.3,
                                             color: displayText.isEmpty
                                                 ? (isBack
-                                                ? Colors.white70
-                                                : scheme.onSurfaceVariant)
+                                                    ? Colors.white70
+                                                    : scheme.onSurfaceVariant)
                                                 : (isBack
-                                                ? Colors.white
-                                                : scheme.onSurface),
+                                                    ? Colors.white
+                                                    : scheme.onSurface),
                                             fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                                    // Header badge positioned at the top-left
+                                    Positioned(
+                                      top: 12,
+                                      left: 12,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: isBack
+                                              ? Colors.white.withOpacity(0.2)
+                                              : scheme.primary.withOpacity(0.1),
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                        child: Text(
+                                          header,
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            letterSpacing: 2,
+                                            color: isBack ? Colors.white : scheme.primary,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ),
@@ -387,7 +455,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
                       duration: const Duration(milliseconds: 200),
                       opacity: _canSave ? 1 : 0.5,
                       child: GradientButton(
-                        onPressed: _canSave ? _saveForm : () {},
+                        onPressed: _attemptSave,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

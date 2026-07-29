@@ -175,7 +175,7 @@ class _QuizScreenState extends State<QuizScreen> {
                           alignment: Alignment.center,
                           transform: Matrix4.identity()
                             ..rotateY(isBack ? pi : 0),
-                          child: Container(
+                            child: Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
                               gradient: gradient,
@@ -195,76 +195,86 @@ class _QuizScreenState extends State<QuizScreen> {
                                 ),
                               ],
                             ),
-                            padding: const EdgeInsets.all(28.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 5),
-                                  decoration: BoxDecoration(
-                                    color: isBack
-                                        ? Colors.white.withOpacity(0.2)
-                                        : scheme.primary.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    header,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      letterSpacing: 2,
-                                      color:
-                                      isBack ? Colors.white : scheme.primary,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 24),
-                                Expanded(
-                                  child: SingleChildScrollView(
-                                    child: Center(
-                                      child: Text(
-                                        displayText,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.w600,
-                                          height: 1.3,
-                                          color: isBack
-                                              ? Colors.white
-                                              : scheme.onSurface,
+                              padding: const EdgeInsets.all(28.0),
+                              child: Stack(
+                                children: [
+                                  // Centered main text
+                                  Center(
+                                    child: SingleChildScrollView(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                        child: Text(
+                                          displayText,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.w600,
+                                            height: 1.3,
+                                            color: isBack
+                                                ? Colors.white
+                                                : scheme.onSurface,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(height: 16),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.touch_app_rounded,
-                                      size: 14,
-                                      color: isBack
-                                          ? Colors.white70
-                                          : scheme.onSurfaceVariant,
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Text(
-                                      _showAnswer
-                                          ? 'Tap to see question'
-                                          : 'Tap to see answer',
-                                      style: TextStyle(
-                                        fontSize: 12,
+
+                                  // Header badge at top-left
+                                  Positioned(
+                                    top: 12,
+                                    left: 12,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                                      decoration: BoxDecoration(
                                         color: isBack
-                                            ? Colors.white70
-                                            : scheme.onSurfaceVariant,
+                                            ? Colors.white.withOpacity(0.2)
+                                            : scheme.primary.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Text(
+                                        header,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          letterSpacing: 2,
+                                          color: isBack ? Colors.white : scheme.primary,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                  ),
+
+                                  // Bottom hint row
+                                  Positioned(
+                                    bottom: 12,
+                                    left: 0,
+                                    right: 0,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.touch_app_rounded,
+                                          size: 14,
+                                          color: isBack
+                                              ? Colors.white70
+                                              : scheme.onSurfaceVariant,
+                                        ),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          _showAnswer
+                                              ? 'Tap to see question'
+                                              : 'Tap to see answer',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: isBack
+                                                ? Colors.white70
+                                                : scheme.onSurfaceVariant,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                           ),
                         ),
                       );
